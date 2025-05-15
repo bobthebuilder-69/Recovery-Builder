@@ -42,7 +42,15 @@ jobs:
             sudo -E apt-get -qq install bc build-essential zip curl libstdc++6 git wget python gcc clang libssl-dev repo rsync flex curl  bison aria2
             sudo curl --create-dirs -L -o /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo
             sudo chmod a+rx /usr/local/bin/repo
-            
+       - name: Clean up Docker images
+         run: |
+            docker_images=$(docker images -q)
+            if [ -n "$docker_images" ]; then
+            docker rmi $docker_images || true
+            else
+            echo "No Docker images to remove."
+            fi
+    
        - name: Sync recovery source and device tree
          run: |
              mkdir work
